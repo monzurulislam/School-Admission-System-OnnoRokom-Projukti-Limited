@@ -64,6 +64,7 @@ Assumptions:
 Assumption:
 - Each shift is a separate class with its own seat count.
 - Example: "Class 6 - Morning Shift" (10 seats) and "Class 6 - Day Shift" (15 seats) are two rows in the classes table. Each has its own ID (starting with c_).
+- Class names are unique (case-insensitive): To prevent administrative confusion and duplicate cards on the admissions dashboard, the system rejects attempts to create classes with an already existing name with 409 Conflict.
 
 
 5. Payment and Confirmation (Section 1.3 and Section 1.5, Rule 5)

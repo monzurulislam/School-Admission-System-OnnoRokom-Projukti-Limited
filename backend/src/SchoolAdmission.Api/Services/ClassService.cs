@@ -29,9 +29,18 @@ public class ClassService : IClassService
             throw new BadRequestException("totalSeats must be greater than 0.");
         }
 
+        var trimmedName = request.Name.Trim();
+        var exists = await _db.Classes
+            .AnyAsync(c => c.Name.ToLower() == trimmedName.ToLower(), ct);
+
+        if (exists)
+        {
+            throw new ConflictException($"A class with the name '{trimmedName}' already exists.");
+        }
+
         var newClass = new Class
         {
-            Name = request.Name.Trim(),
+            Name = trimmedName,
             TotalSeats = request.TotalSeats,
             CreatedAt = DateTime.UtcNow
         };

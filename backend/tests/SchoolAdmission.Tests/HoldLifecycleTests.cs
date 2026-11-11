@@ -17,6 +17,17 @@ public class HoldLifecycleTests : IClassFixture<CustomWebApplicationFactory>
     }
 
     [Fact]
+    public async Task CreateClass_With_Duplicate_Name_Should_Return_409_Conflict()
+    {
+        var className = $"Unique Class {Guid.NewGuid():N}";
+        var firstRes = await _client.PostAsJsonAsync("/classes", new CreateClassRequest { Name = className, TotalSeats = 20 });
+        firstRes.StatusCode.Should().Be(HttpStatusCode.Created);
+
+        var duplicateRes = await _client.PostAsJsonAsync("/classes", new CreateClassRequest { Name = className.ToLower(), TotalSeats = 25 });
+        duplicateRes.StatusCode.Should().Be(HttpStatusCode.Conflict);
+    }
+
+    [Fact]
     public async Task Complete_Hold_Lifecycle_Should_Work_Correctly()
     {
         // 1. Create a Class
